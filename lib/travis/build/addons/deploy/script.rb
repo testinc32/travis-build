@@ -41,23 +41,23 @@ module Travis
             @allow_failure = config.delete(:allow_failure)
           end
 
-          def deploy
+          def deploy(index)
             if data.pull_request
               warning_message "the current build is a pull request."
               return
             end
 
             if conditions.empty?
-              run
+              run(index)
             else
-              check_conditions_and_run
+              check_conditions_and_run(index)
             end
           end
 
           private
-            def check_conditions_and_run
+            def check_conditions_and_run(index)
               sh.if(conditions) do
-                run
+                run(index)
               end
 
               sh.else do
@@ -123,9 +123,9 @@ module Travis
               (VERSIONED_RUNTIMES & on.keys).map { |runtime| "$TRAVIS_#{runtime.to_s.upcase}_VERSION = #{on[runtime].to_s.shellescape}" }
             end
 
-            def run
+            def run(index)
               script.stages.run_stage(:custom, :before_deploy)
-              sh.fold('dpl.0') { install }
+              sh.fold("dpl.#{index}_0") { install }
               cmd(run_command, echo: false, assert: false, timing: true)
               script.stages.run_stage(:custom, :after_deploy)
             end

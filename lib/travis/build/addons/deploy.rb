@@ -19,7 +19,9 @@ module Travis
           # sh.if('$TRAVIS_TEST_RESULT = 0') do
           #   providers.map(&:deploy)
           # end
-          providers.map(&:deploy)
+          providers.each_with_index do |provider, idx|
+            provider.deploy(idx)
+          end
         end
 
         private
