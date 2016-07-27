@@ -50,7 +50,7 @@ module Travis
         end
 
         post '/script' do
-          payload = JSON.parse(request.body.read)
+          payload = JSON.parse(request.body.read).tap {|x| puts "payload=#{x}"}
 
           if ENV['SENTRY_DSN']
             Raven.extra_context(
