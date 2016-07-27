@@ -76,7 +76,7 @@ module Travis
 
           def write_netrc
             if data.prefer_https?
-              sh.raw "echo -e \"machine github.com login #{data[:oauth_token]}\\n\" > $HOME/.netrc"
+              sh.cmd "echo -e \"machine github.com login #{data[:oauth_token]}\\n\" > $HOME/.netrc", echo: true
             end
           end
 
